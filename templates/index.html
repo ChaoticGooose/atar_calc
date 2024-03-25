@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ATAR Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Raw Study Score</th>
+                    {% for year in reports %}
+                        <th scope="col">Scaling {{ year }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(6) %}
+                    <tr>
+                        <td>
+                            <select name="subject{{ i }}">
+                                <option value="0">Select a subject</option>
+                                {% for subject in subjects %}
+                                    <option value="{{ subject }}">{{ subject }}</option>
+                                {% endfor %}
+                            </select>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
