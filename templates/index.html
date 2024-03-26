@@ -14,8 +14,8 @@
                 <tr>
                     <th scope="col">Subject</th>
                     <th scope="col">Raw Study Score</th>
-                    {% for year in reports %}
-                        <th scope="col">Scaling {{ year }}</th>
+                    {% for year in years %}
+                        <th scope="col">{{ year }}</th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -29,8 +29,17 @@
                                     <option value="{{ subject }}">{{ subject }}</option>
                                 {% endfor %}
                             </select>
+                        </td>
+                        <td>
+                            <input type="number" name="raw{{ i }}" min="0" max="50">
+                        </td>
+                        {% for year in years %}
+                            <td>
+                                <p type="number" name="score{{ i }}{{ year }}" min="0" max="50"></p>
+                            </td>
+                        {% endfor %}
                     </tr>
-                {% endfor %}
+                {% endfor %} 
             </tbody>
         </table>
     </div>
