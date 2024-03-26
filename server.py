@@ -15,20 +15,17 @@ def read_csv(csv_list: list) -> dict:
         data[year] = current = {}
         with open(csv_file, 'r') as f:
             reader = csv.DictReader(f)
-            for row in reader:
+            for row in reader: # Add all rows to dict
                 subject = row.pop('Subject')
                 current[subject] = row
-    return dict(sorted(data.items(), key=lambda x: x[0]))
+    return dict(sorted(data.items(), key=lambda x: x[0])) # Sort by year
                 
 
 app = Flask(__name__)
 
-csv_list = glob('scaling/*.csv')
+csv_list = glob('scaling/*.csv') # Get all csv files in ./scaling
 
 scaling_data = read_csv(csv_list)
-print(scaling_data)
-# Sort by year
-scaling_data = dict(sorted(scaling_data.items(), key=lambda x: x[0]))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -36,7 +33,7 @@ def index():
         return render_template(
                 'index.html', 
                 years=scaling_data.keys(),
-                subjects=next(iter(scaling_data.values())).keys()
+                subjects=next(iter(scaling_data.values())).keys() # Pass latest subject list
                 )
 
 
