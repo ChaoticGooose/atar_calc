@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import csv
 from glob import glob
+from scipy.interpolate import interp1d
+from numpy import array
 
 """
 Parameters:
@@ -16,8 +18,17 @@ def read_csv(csv_list: list) -> dict:
         with open(csv_file, 'r') as f:
             reader = csv.DictReader(f)
             for row in reader: # Add all rows to dict
-                subject = row.pop('Subject')
-                current[subject] = row
+                subject = row['Subject']
+                scaling_list = [float(row[str(i)]) for i in range(20, 50, 5)]
+                current[subject] = {}
+
+                # Interpolate scaling data with extrapolation
+                x = array(range(20, 50, 5))
+                y = array(scaling_list)
+                f = interp1d(x, y, kind='cubic', fill_value='extrapolate')
+                # Add interpolated data to dict
+                for i in range(51):
+                    current[subject][str(i)] = int(f(i))
     return dict(sorted(data.items(), key=lambda x: x[0])) # Sort by year
                 
 
@@ -35,5 +46,13 @@ def index():
                 years=scaling_data.keys(),
                 subjects=next(iter(scaling_data.values())).keys() # Pass latest subject list
                 )
+    else:
+        data = dict(request.json) # POST request headers
 
-
+        # Get interpolated scaling data for given subject and raw score
+        scaling = {}
+        for year, subjects in scaling_data.items():
+            if data["subject"] in subjects:
+                scaling[year] = subjects[data["subject"]][str(data['rawScore'])]
+                break
+        return jsonify(scaling)
