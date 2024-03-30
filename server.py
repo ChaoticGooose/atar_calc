@@ -50,9 +50,12 @@ def index():
         data = dict(request.json) # POST request headers
 
         # Get interpolated scaling data for given subject and raw score
-        scaling = {}
-        for year, subjects in scaling_data.items():
-            if data["subject"] in subjects:
-                scaling[year] = subjects[data["subject"]][str(data['rawScore'])]
-                break
-        return jsonify(scaling)
+        try:
+            scaling = {}
+            for year, subjects in scaling_data.items():
+                if data["subject"] in subjects:
+                    scaling[year] = subjects[data["subject"]][str(data['rawScore'])]
+                    break
+            return jsonify(scaling)
+        except:
+            return "Invalid data", 400

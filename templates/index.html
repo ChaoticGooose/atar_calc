@@ -36,7 +36,7 @@
                         </td>
                         {% for year in years %}
                             <td>
-                                <p type="number" name="score{{ i }}{{ year }}" min="0" max="50"></p>
+                                <p type="number" class="{{ year }}" name="{{ year }}" min="0" max="50"></p>
                             </td>
                         {% endfor %}
                     </tr>
